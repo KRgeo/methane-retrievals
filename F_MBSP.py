@@ -20,8 +20,11 @@ from matplotlib import pyplot as plt
 import utm
 
 ## Hassi Messaoud plume source
-# source_lat = 31.6585
-# source_lon = 5.9053
+source_lat = 31.6585
+source_lon = 5.9053
+
+plume_date = '2019-11-20'
+plume_next_day = '2019-11-21'
 
 
 
@@ -80,7 +83,7 @@ def retrieve_F_MBSP(source_lon, source_lat, image_date, image_next_day):
 
     return F_MBSP, minval, maxval
 
-F_MBSP, minval, maxval = retrieve_F_MBSP(source_lon, source_lat, plume_date_start, plume_date_end)
+# F_MBSP, minval, maxval = retrieve_F_MBSP(source_lon, source_lat, plume_date_start, plume_date_end)
 
 
 # ##PLotting test

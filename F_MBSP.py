@@ -31,12 +31,20 @@ plume_next_day = '2019-11-21'
 def retrieve_F_MBSP(source_lon, source_lat, image_date, image_next_day):
 
     ## Get coordinates of 10km surrounding area
-    (s_lon, s_lat, zone, northing) = utm.from_latlon(source_lon,source_lat)
-    maxlon, maxlat = utm.to_latlon(s_lon +5000, s_lat+5000, zone ,northing)
-    minlon, minlat = utm.to_latlon(s_lon -5000, s_lat-5000, zone ,northing)
+
+    ##comm out for now
+    # (s_lon, s_lat, zone, northing) = utm.from_latlon(source_lon,source_lat)
+    # maxlon, maxlat = utm.to_latlon(s_lon +5000, s_lat+5000, zone ,northing)
+    # minlon, minlat = utm.to_latlon(s_lon -5000, s_lat-5000, zone ,northing)
+    # surrounding10km = ee.Geometry.Rectangle([minlon, minlat, maxlon, maxlat], None, False)
+
+    # Create square geometry area centered on source_lon, source_lat with 10km diameter
+    size_add = 5000  # 10km in meters
+    minlon = source_lon - size_add / 111000
+    maxlon = source_lon + size_add / 111000
+    minlat = source_lat - size_add / (111000 * np.cos(np.deg2rad(source_lat)))
+    maxlat = source_lat + size_add / (111000 * np.cos(np.deg2rad(source_lat)))
     surrounding10km = ee.Geometry.Rectangle([minlon, minlat, maxlon, maxlat], None, False)
-
-
 
     
     ## Get image from image collection and clip to 10x10km source surrounding area
@@ -81,7 +89,7 @@ def retrieve_F_MBSP(source_lon, source_lat, image_date, image_next_day):
     minval = F_MBSP.reduceRegion(ee.Reducer.min(), geometry = surrounding10km).get('constant').getInfo()
     maxval = F_MBSP.reduceRegion(ee.Reducer.max(), geometry = surrounding10km).get('constant').getInfo()
 
-    return F_MBSP, minval, maxval
+    return F_MBSP, minval, maxval, surrounding10km
 
 # F_MBSP, minval, maxval = retrieve_F_MBSP(source_lon, source_lat, plume_date_start, plume_date_end)
 
